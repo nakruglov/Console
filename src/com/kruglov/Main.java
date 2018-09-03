@@ -2,16 +2,13 @@ package com.kruglov;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Main {
-    static boolean isValidInputPath(String path) {
+    static boolean isValidSyntaxPath(String path) {
         Pattern p = Pattern.compile("([a-zA-Z]:[^:*<>|\"?]*)");
         Pattern p2 = Pattern.compile("([.[^:*<>|\"?]]+)");
         Matcher m = p.matcher(path);
@@ -53,24 +50,26 @@ public class Main {
             FilesUtils.printDir(path.toAbsolutePath().normalize());
             return path;
         } else if (command.equals("cd")) {
-            if (isValidInputPath((arg1)) && Files.exists(path.resolve(Paths.get(arg1)))) {
+            if (isValidSyntaxPath((arg1)) && Files.exists(path.resolve(Paths.get(arg1)))) {
                 path = path.resolve(Paths.get(arg1));
                 return path;
             } else {
                 System.out.println("Error: Directory does not exist");
             }
         } else if (command.equals("crdir")) {
-            if (isValidInputPath(arg1) && !Files.exists(path.resolve(Paths.get(arg1)))) {
-                Path newDir = path.resolve(Paths.get(arg1));
-                FilesUtils.createDir(newDir);
-                return path;
-            } else {
-                System.out.println("Error: Directory already exist");
-            }
+            if (!arg1.equals("")) {
+                if (isValidSyntaxPath(arg1) && !Files.exists(path.resolve(Paths.get(arg1)))) {
+                    Path newDir = path.resolve(Paths.get(arg1));
+                    FilesUtils.createDir(newDir);
+                    return path;
+                } else {
+                    System.out.println("Error: Directory already exist");
+                }
+            } else System.out.println("Error: No path found");
         } else if (command.equals("copy") && args.length > 0) {
-            if (isValidInputPath(source)) {
+            if (isValidSyntaxPath(source)) {
                 if (Files.exists(path.resolve(Paths.get(source)))) {
-                    if (isValidInputPath(dest)) {
+                    if (isValidSyntaxPath(dest)) {
                         if (Files.exists(path.resolve(Paths.get(dest)))) {
                             {
                                 Path sourceCopy = path.resolve(Paths.get(source));
@@ -82,9 +81,9 @@ public class Main {
                 } else System.out.println("Error: Source path has invalid symbols or empty");
             } else System.out.println("Error: Source path has invalid symbols or empty");
         } else if (command.equals("zip") && args.length > 0) {
-            if (isValidInputPath(source)) {
+            if (isValidSyntaxPath(source)) {
                 if (Files.exists(path.resolve(Paths.get(source)))) {
-                    if (isValidInputPath(dest)) {
+                    if (isValidSyntaxPath(dest)) {
                         if (Files.exists(path.resolve(Paths.get(dest)))) {
                             {
                                 Path sourceCopy = path.resolve(Paths.get(source));
@@ -97,9 +96,9 @@ public class Main {
                 } else System.out.println("Error: Source directory does not exist");
             } else System.out.println("Error: Source path has invalid symbols or empty");
         } else if (command.equals("unzip") && args.length > 0) {
-            if (isValidInputPath(source)) {
+            if (isValidSyntaxPath(source)) {
                 if (Files.exists(path.resolve(Paths.get(source)))) {
-                    if (isValidInputPath(dest)) {
+                    if (isValidSyntaxPath(dest)) {
                         if (Files.exists(path.resolve(Paths.get(dest)))) {
                             {
                                 Path sourceCopy = path.resolve(Paths.get(source));
@@ -111,13 +110,14 @@ public class Main {
                 } else System.out.println("Error: ZIP file does not exist ");
             } else System.out.println("Error: Source path to ZIP file has invalid symbols or empty");
         } else if (command.equals("del")) {
-            if (isValidInputPath(arg1) && Files.exists(path.resolve(Paths.get(arg1)))) {
+            if (isValidSyntaxPath(arg1) && Files.exists(path.resolve(Paths.get(arg1)))) {
 
                 Path delDir = path.resolve(Paths.get(arg1));
                 FilesUtils.del(delDir);
+                System.out.println("Directory " + delDir.toAbsolutePath().normalize() + " has been deleted");
                 return path;
             } else {
-                System.out.println("Error: Directory already exists");
+                System.out.println("Error: Directory not found");
             }
         } else System.out.println("UNKNOWN COMMAND");
         return path;
@@ -125,7 +125,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("d:\\");
+        Path path = Paths.get(".\\");
         System.out.print(path.toAbsolutePath().normalize() + ">");
         Scanner scanner = new Scanner(System.in);
         String input;

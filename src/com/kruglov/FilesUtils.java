@@ -52,13 +52,15 @@ class FilesUtils {
 
     static void copyDir(Path pathSource, Path pathDest) throws IOException {
         Path pathDestination = pathDest.resolve(pathSource.getFileName());
-        if (Files.exists(pathDestination)) System.out.println("Error: Directory "+pathDestination.toAbsolutePath().normalize()+" exists"); else {
-        try {
-            Files.walkFileTree(pathSource, new MyFileCopyVisitor(pathSource, pathDestination));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("All Files Copied Successfully To " + pathDestination);
+        if (Files.exists(pathDestination))
+            System.out.println("Error: Directory " + pathDestination.toAbsolutePath().normalize() + " exists");
+        else {
+            try {
+                Files.walkFileTree(pathSource, new MyFileCopyVisitor(pathSource, pathDestination));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("All Files Copied Successfully To " + pathDestination);
         }
 
     }
@@ -107,7 +109,7 @@ class FilesUtils {
     static void createDir(Path path) {
         try {
             Files.createDirectory(path);
-            System.out.println("Directory  " + path.toAbsolutePath() + "  was created");
+            System.out.println("Directory  " + path.toAbsolutePath().normalize() + "  was created");
         } catch (IOException e) {
             System.out.println("Directory already exists");
         }

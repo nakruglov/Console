@@ -15,7 +15,6 @@ public class Main {
         Matcher m2 = p2.matcher(path);
         return (m.matches() || m2.matches());
     }
-
     public static Path parse(String input, Path path) throws IOException {
         input = input.trim();
         int indexOfSpace = input.indexOf(" ");
@@ -122,8 +121,6 @@ public class Main {
         } else System.out.println("UNKNOWN COMMAND");
         return path;
     }
-
-
     public static void main(String[] args) throws IOException {
         Path path = Paths.get(".\\");
         System.out.print(path.toAbsolutePath().normalize() + ">");
